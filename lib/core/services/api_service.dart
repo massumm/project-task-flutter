@@ -14,7 +14,7 @@ class ApiService {
     return _dio.post(path, data: data);
   }
 
-  Future<Response> get(String path) {
-    return _dio.get(path);
+  Future<Response> get(String path) async {
+    return await  _dio.get(path);
   }
 }

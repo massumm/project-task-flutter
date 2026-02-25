@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:project_task_flutter/modules/auth/repositories/auth_repository.dart';
+import 'package:project_task_flutter/routes/app_pages.dart';
+import 'package:project_task_flutter/routes/app_routes.dart';
 
 class AuthController extends GetxController {
   final AuthRepository repository;
@@ -15,17 +17,31 @@ class AuthController extends GetxController {
 
   final box = GetStorage();
 
-  Future<void> login()async {
+  Future<void> login() async {
     try {
-      print("object"+emailController.value.text+passwordController.value.text);
       isLoading.value = true;
-      final response = repository.login(emailController.value.text, passwordController.value.text);
-      print("object"+response.toString());
+      // ADD 'await' HERE
+      final response = await repository.login(
+          emailController.value.text,
+          passwordController.value.text
+      );
+
+      print("Response data: $response");
+
       box.write("token", response["access_token"]);
       box.write("role", response["role"]);
-    }finally{
+
+      Get.snackbar("Success", "Login Successful");
+      Get.offAllNamed(AppRoutes.dashboard);
+    } catch (e) {
+      Get.snackbar("Error", "Login failed: $e");
+    } finally {
       isLoading.value = false;
     }
+  }
+  void logout() {
+    box.erase();
+    Get.offAllNamed("/login");
   }
 
   Future<void> register()async {

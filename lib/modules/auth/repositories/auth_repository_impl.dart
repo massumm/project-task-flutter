@@ -5,12 +5,16 @@ import 'auth_repository.dart';
 class AuthRepositoryImpl extends AuthRepository {
   final ApiService api;
   AuthRepositoryImpl(this.api);
+
   @override
   Future<Map<String, dynamic>> login(String email, String password) async {
+  print("asdf"+email+password+ApiConfig.login);
    final response= await api.post(ApiConfig.login, {
       "email": email,
       "password": password,
     });
+
+   print("asdf"+response.toString());
 
    return response.data;
   }
