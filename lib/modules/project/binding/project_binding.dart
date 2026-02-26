@@ -7,11 +7,12 @@ import '../controller/project_controller.dart';
 class ProjectBinding extends Bindings {
   @override
   void dependencies() {
+    if (!Get.isRegistered<ApiService>()) {
+      Get.put<ApiService>(ApiService());
+    }
     Get.lazyPut<ProjectRepository>(
-          () => ProjectRepositoryImpl(Get.find<ApiService>()),
+      () => ProjectRepositoryImpl(Get.find<ApiService>()),
     );
-    Get.lazyPut<ProjectController>(
-          () => ProjectController(Get.find()),
-    );
+    Get.lazyPut<ProjectController>(() => ProjectController(Get.find()));
   }
 }

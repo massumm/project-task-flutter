@@ -8,26 +8,32 @@ class AuthRepositoryImpl extends AuthRepository {
 
   @override
   Future<Map<String, dynamic>> login(String email, String password) async {
-  print("asdf"+email+password+ApiConfig.login);
-   final response= await api.post(ApiConfig.login, {
+    final response = await api.post(ApiConfig.login, {
       "email": email,
       "password": password,
     });
-
-   print("asdf"+response.toString());
-
-   return response.data;
-  }
-
-  @override
-  Future<Map<String, dynamic>> register(String email, String password) async {
-
-    final response= await api.post(ApiConfig.login, {
-      "email": email,
-      "password": password,
-    });
-
     return response.data;
   }
 
+  @override
+  Future<Map<String, dynamic>> register(
+    String name,
+    String email,
+    String password,
+    String role,
+  ) async {
+    final response = await api.post(ApiConfig.register, {
+      "name": name,
+      "email": email,
+      "password": password,
+      "role": role,
+    });
+    return response.data;
+  }
+
+  @override
+  Future<Map<String, dynamic>> getMe() async {
+    final response = await api.get(ApiConfig.me);
+    return response.data;
+  }
 }

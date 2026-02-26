@@ -38,6 +38,8 @@ dependencies:
   dio:
   get_storage:
   flutter_screenutil:
+  file_picker:
+  url_launcher:
 dev_dependencies:
   flutter_test:
     sdk: flutter

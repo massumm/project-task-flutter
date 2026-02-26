@@ -21,7 +21,7 @@ class ProjectController extends GetxController {
       isLoading.value = true;
       projects.value = await repository.getProjects();
     } catch (e) {
-      Get.snackbar("Error", "Failed to load projects");
+      Get.snackbar("Error", "Failed to load projects: $e");
     } finally {
       isLoading.value = false;
     }
@@ -30,15 +30,12 @@ class ProjectController extends GetxController {
   Future<void> createProject(String title, String description) async {
     try {
       isLoading.value = true;
-
       await repository.createProject(title, description);
-
-      Get.back(); // close create screen
+      Get.back();
       Get.snackbar("Success", "Project Created");
-
-      fetchProjects(); // refresh list
+      fetchProjects();
     } catch (e) {
-      Get.snackbar("Error", "Failed to create project");
+      Get.snackbar("Error", "Failed to create project: $e");
     } finally {
       isLoading.value = false;
     }
