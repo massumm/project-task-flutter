@@ -1,13 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controller/task_controller.dart';
+import '../../auth/controller/auth_controller.dart';
 
-class CreateTaskView extends StatelessWidget {
+class CreateTaskView extends StatefulWidget {
   const CreateTaskView({super.key});
 
   @override
+  State<CreateTaskView> createState() => _CreateTaskViewState();
+}
+
+class _CreateTaskViewState extends State<CreateTaskView> {
+  final TaskController controller = Get.find<TaskController>();
+  final AuthController authController = Get.find<AuthController>();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      authController.fetchUsers(role: 'developer');
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final controller = Get.find<TaskController>();
     final projectId = Get.arguments?["projectId"] ?? "";
 
     return Scaffold(
@@ -44,15 +60,36 @@ class CreateTaskView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            TextField(
-              controller: controller.developerIdController,
-              decoration: const InputDecoration(
-                labelText: "Developer ID (UUID)",
-                prefixIcon: Icon(Icons.person),
-                border: OutlineInputBorder(),
-                helperText: "Enter the developer's user ID",
-              ),
-            ),
+            Obx(() {
+              if (authController.isLoading.value &&
+                  authController.users.isEmpty) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              return DropdownButtonFormField<String>(
+                decoration: const InputDecoration(
+                  labelText: "Assign Developer",
+                  prefixIcon: Icon(Icons.person),
+                  border: OutlineInputBorder(),
+                  helperText: "Select the developer for this task",
+                ),
+                value: controller.developerIdController.text.isNotEmpty
+                    ? controller.developerIdController.text
+                    : null,
+                items: authController.users.map<DropdownMenuItem<String>>((
+                  user,
+                ) {
+                  return DropdownMenuItem<String>(
+                    value: user.id,
+                    child: Text(user.name),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  if (value != null) {
+                    controller.developerIdController.text = value;
+                  }
+                },
+              );
+            }),
             const SizedBox(height: 16),
             TextField(
               controller: controller.hourlyRateController,

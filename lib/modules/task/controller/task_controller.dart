@@ -28,6 +28,7 @@ class TaskController extends GetxController {
       isLoading.value = true;
       tasks.value = await repository.getProjectTasks(projectId);
     } catch (e) {
+      print("Failed to load tasks: $e");
       Get.snackbar("Error", "Failed to load tasks: $e");
     } finally {
       isLoading.value = false;
@@ -48,6 +49,18 @@ class TaskController extends GetxController {
   Future<void> createTask(String projectId) async {
     try {
       isLoading.value = true;
+      print(
+        "project " +
+            projectId +
+            " title " +
+            titleController.text.trim() +
+            " description " +
+            descriptionController.text.trim() +
+            " developer " +
+            developerIdController.text.trim() +
+            " hourly " +
+            hourlyRateController.text.trim(),
+      );
       await repository.createTask(
         projectId: projectId,
         title: titleController.text.trim(),
@@ -110,6 +123,7 @@ class TaskController extends GetxController {
       currentTask.value = await repository.submitTask(taskId, hours, formData);
       Get.snackbar("Success", "Task submitted successfully");
     } catch (e) {
+      print("Failed to load tasks: $e");
       Get.snackbar("Error", "Failed to submit task: $e");
     } finally {
       isLoading.value = false;

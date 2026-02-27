@@ -8,7 +8,7 @@ class ProjectBinding extends Bindings {
   @override
   void dependencies() {
     if (!Get.isRegistered<ApiService>()) {
-      Get.put<ApiService>(ApiService());
+      Get.put<ApiService>(ApiService(), permanent: true);
     }
     Get.lazyPut<ProjectRepository>(
       () => ProjectRepositoryImpl(Get.find<ApiService>()),

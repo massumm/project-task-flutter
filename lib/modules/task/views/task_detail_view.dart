@@ -15,7 +15,9 @@ class TaskDetailView extends StatelessWidget {
     final taskId = Get.arguments?["taskId"] ?? "";
     final role = GetStorage().read("role") ?? "";
 
-    controller.fetchTask(taskId);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.fetchTask(taskId);
+    });
 
     return Scaffold(
       appBar: AppBar(title: const Text("Task Details"), centerTitle: true),
@@ -316,8 +318,12 @@ class TaskDetailView extends StatelessWidget {
                               width: double.infinity,
                               child: OutlinedButton.icon(
                                 onPressed: () async {
+                                  final solutionPath =
+                                      task.solutionFile!.startsWith('/')
+                                      ? task.solutionFile!
+                                      : '/${task.solutionFile!}';
                                   final url = Uri.parse(
-                                    "${ApiConfig.baseUrl}${task.solutionFile}",
+                                    "${ApiConfig.baseUrl}$solutionPath",
                                   );
                                   if (await canLaunchUrl(url)) {
                                     await launchUrl(

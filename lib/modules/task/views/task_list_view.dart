@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:project_task_flutter/routes/app_routes.dart';
 import '../controller/task_controller.dart';
 import '../model/task_model.dart';
 
-class TaskListView extends StatelessWidget {
+class TaskListView extends GetView<TaskController> {
   const TaskListView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<TaskController>();
     final projectId = Get.arguments?["projectId"] ?? "";
+    print("projectid" + projectId);
     final projectTitle = Get.arguments?["projectTitle"] ?? "Tasks";
     final role = GetStorage().read("role") ?? "";
 
-    controller.fetchProjectTasks(projectId);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.fetchProjectTasks(projectId);
+    });
 
     return Scaffold(
       appBar: AppBar(title: Text(projectTitle), centerTitle: true),
@@ -57,7 +60,7 @@ class TaskListView extends StatelessWidget {
       floatingActionButton: role == "buyer"
           ? FloatingActionButton.extended(
               onPressed: () => Get.toNamed(
-                "/create-task",
+                AppRoutes.createTask,
                 arguments: {"projectId": projectId},
               ),
               icon: const Icon(Icons.add),
@@ -109,10 +112,13 @@ class _TaskCard extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: InkWell(
-        onTap: () => Get.toNamed(
-          "/task-detail",
-          arguments: {"taskId": task.id, "projectId": projectId},
-        ),
+        onTap: () {
+          Get.toNamed(
+            AppRoutes.taskDetail,
+            arguments: {"taskId": task.id, "projectId": projectId},
+            preventDuplicates: false,
+          );
+        },
         borderRadius: BorderRadius.circular(12),
         child: Padding(
           padding: const EdgeInsets.all(16),

@@ -14,7 +14,7 @@ class DashboardBinding extends Bindings {
   void dependencies() {
     // Ensure ApiService is available
     if (!Get.isRegistered<ApiService>()) {
-      Get.put<ApiService>(ApiService());
+      Get.put<ApiService>(ApiService(), permanent: true);
     }
 
     // Auth (needed for logout)

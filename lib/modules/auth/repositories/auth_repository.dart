@@ -7,4 +7,5 @@ abstract class AuthRepository {
     String role,
   );
   Future<Map<String, dynamic>> getMe();
+  Future<List<dynamic>> fetchUsers({String? role});
 }

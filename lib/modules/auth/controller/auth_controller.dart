@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:project_task_flutter/modules/auth/model/usre_model.dart';
 import 'package:project_task_flutter/modules/auth/repositories/auth_repository.dart';
 import 'package:project_task_flutter/routes/app_routes.dart';
 
 class AuthController extends GetxController {
   final AuthRepository repository;
   AuthController(this.repository);
+
+  var users = <UserModel>[].obs;
 
   var isLoading = false.obs;
 
@@ -56,6 +59,18 @@ class AuthController extends GetxController {
       Get.offAllNamed(AppRoutes.login);
     } catch (e) {
       Get.snackbar("Error", "Registration failed: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> fetchUsers({String? role}) async {
+    try {
+      isLoading.value = true;
+      final response = await repository.fetchUsers(role: role);
+      users.assignAll(response.map((x) => UserModel.fromJson(x)).toList());
+    } catch (e) {
+      Get.snackbar("Error", "Failed to load users: $e");
     } finally {
       isLoading.value = false;
     }

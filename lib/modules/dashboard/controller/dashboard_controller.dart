@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import '../../auth/controller/auth_controller.dart';
+import '../../../routes/app_routes.dart';
 
 class DashboardController extends GetxController {
   final box = GetStorage();
@@ -14,6 +14,7 @@ class DashboardController extends GetxController {
   }
 
   void logout() {
-    Get.find<AuthController>().logout();
+    box.erase();
+    Get.offAllNamed(AppRoutes.login);
   }
 }

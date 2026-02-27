@@ -36,4 +36,13 @@ class AuthRepositoryImpl extends AuthRepository {
     final response = await api.get(ApiConfig.me);
     return response.data;
   }
+
+  @override
+  Future<List<dynamic>> fetchUsers({String? role}) async {
+    final response = await api.get(
+      ApiConfig.userlist,
+      queryParameters: role != null ? {'role': role} : null,
+    );
+    return response.data;
+  }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:project_task_flutter/routes/app_routes.dart';
 import '../../admin/views/admin_dashboard_view.dart';
 import '../../project/controller/project_controller.dart';
 import '../controller/dashboard_controller.dart';
@@ -107,11 +108,12 @@ class _BuyerDashboard extends StatelessWidget {
           itemCount: projectController.projects.length,
           itemBuilder: (context, index) {
             final project = projectController.projects[index];
+            print("project in project"+project.id);
             return Card(
               margin: const EdgeInsets.only(bottom: 12),
               child: InkWell(
                 onTap: () => Get.toNamed(
-                  "/task-list",
+                  AppRoutes.taskList,
                   arguments: {
                     "projectId": project.id,
                     "projectTitle": project.title,
